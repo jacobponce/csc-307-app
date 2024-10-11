@@ -71,7 +71,7 @@ app.get("/users", (req, res) => {
       res.send(result);
     }
     else if (job){
-      let result = findUserByName(job);
+      let result = findUserByJob(job);
       result = { users_list: result };
       res.send(result);
     }
