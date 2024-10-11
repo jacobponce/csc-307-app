@@ -50,39 +50,36 @@ const findUserByJob = (job) => {
         (user) => user["job"] === job
     );
 };
-  
-app.get("/users", (req, res) => {
-  const name = req.query.name;
-  if (name != undefined) {
-    let result = findUserByName(name);
-    result = { users_list: result };
-    res.send(result);
-  } else {
-    res.send(users);
-  }
-});
 
-app.get("/users/name=:name", (req, res) => {
-    const name = req.params.name;
-    if (name != undefined) {
+const findUserByJobAndName = (name, job) => {
+  return users["users_list"].filter(
+      (user) => user["job"] === job && user["name"] === name
+  );
+};
+
+app.get("/users", (req, res) => {
+    const name = req.query.name;
+    const job = req.query.job;
+    if (name && job) {
+      let result = findUserByJobAndName(name, job);
+      result = { users_list: result };
+      res.send(result);
+    } 
+    else if (name){
       let result = findUserByName(name);
       result = { users_list: result };
       res.send(result);
-    } else {
+    }
+    else if (job){
+      let result = findUserByName(job);
+      result = { users_list: result };
+      res.send(result);
+    }
+    else {
       res.send(users);
     }
   });
 
-app.get("/users/job=:job", (req, res) => {
-const job = req.params.job;
-if (job != undefined) {
-    let result = findUserByJob(job);
-    result = { users_list: result };
-    res.send(result);
-} else {
-    res.send(users);
-}
-});
  
 // This helper function makes it easier to refactor and edit later on.
 const findUserById = (id) =>
