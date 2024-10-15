@@ -33,7 +33,7 @@ const users = {
       }
     ]
   };
-  
+
 app.use(cors());
 app.use(express.json());
 
@@ -108,20 +108,21 @@ app.delete("/users/:id", (req, res) => {
         res.status(404).send("Resource not found.");
     } else {
         deleteUserById(id);
-        res.send(`User with id: ${id} deleted`);
+        res.status(204).send(`User with id: ${id} deleted`);
     }
 });
 
 const addUser = (user) => {
+    user.id = Math.random().toString() // create random id
     users["users_list"].push(user);
     return user;
   };
   
-  app.post("/users", (req, res) => {
-    const userToAdd = req.body;
-    addUser(userToAdd);
-    res.send();
-  });
+app.post("/users", (req, res) => {
+  const userToAdd = req.body;
+  addUser(userToAdd);
+  res.status(201).send(userToAdd);
+});
 
 app.listen(port, () => {
   console.log(
